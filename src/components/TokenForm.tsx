@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -55,8 +56,8 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 export function TokenForm() {
-  const [tokenNumber, setTokenNumber] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -68,12 +69,6 @@ export function TokenForm() {
     },
   });
 
-  const generateTokenNumber = () => {
-    const timestamp = Date.now().toString(36).toUpperCase();
-    const random = Math.random().toString(36).substring(2, 7).toUpperCase();
-    return `TK-${timestamp}-${random}`;
-  };
-
   const onSubmit = async (values: FormValues) => {
     setIsSubmitting(true);
 
@@ -84,7 +79,7 @@ export function TokenForm() {
       formData.append("Tea", values.teaQuantity || "0");
       formData.append("Tiramisu", values.tiramisuQuantity || "0");
 
-      const response = await fetch("https://script.google.com/macros/s/AKfycbyaug8wAQH1G_r9hWQMxQOiHfeo44exxjvCE19UcfJ_3zDfK4SzN2XobMBopEr3Pgg0/exec", {
+      const response = await fetch(import.meta.env.VITE_SUBMIT_URL, {
         method: "POST",
         body: formData,
       });
@@ -92,7 +87,7 @@ export function TokenForm() {
       const data = await response.json();
 
       if (data.success) {
-        setTokenNumber(data.data.orderNumber.toString());
+        navigate(`/order-status?token=${data.data.orderNumber}`);
       } else {
         console.error("Submission failed:", data.message);
         alert("Something went wrong: " + data.message);
@@ -105,97 +100,51 @@ export function TokenForm() {
     }
   };
 
-  const handleNewSubmission = () => {
-    setTokenNumber(null);
-    form.reset();
-  };
-
-  if (tokenNumber) {
-    return (
-      <div className="w-full max-w-md mx-auto">
-        <div className="bg-card rounded-2xl shadow-soft p-8 border border-border/50 backdrop-blur-sm animate-in fade-in-0 slide-in-from-bottom-4 duration-500">
-          <div className="flex flex-col items-center text-center space-y-6">
-            <div className="relative">
-              <div className="absolute inset-0 bg-success/20 blur-2xl rounded-full animate-pulse"></div>
-              <div className="relative bg-success/10 p-4 rounded-full ring-4 ring-success/20">
-                <Check className="h-12 w-12 text-success" strokeWidth={2.5} />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <h2 className="text-2xl font-bold tracking-tight">Order Placed!</h2>
-              <p className="text-muted-foreground">
-                Your order has been received successfully.
-              </p>
-            </div>
-
-            <div className="w-full bg-muted/50 rounded-xl p-6 space-y-2 border border-border/30">
-              <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
-                Your Token Number
-              </p>
-              <p className="text-2xl font-bold font-mono tracking-tight text-foreground">
-                {tokenNumber}
-              </p>
-            </div>
-
-            <Button
-              onClick={handleNewSubmission}
-              className="w-full"
-              size="lg"
-            >
-              Place Another Order
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="w-full max-w-md mx-auto space-y-8">
-      {/* Header Section */}
-      <div className="text-center space-y-6">
-        {/* <div className="relative w-full h-48 rounded-2xl overflow-hidden shadow-lg border-4 border-card">
-          <img
-            src="/banner.png"
-            alt="The Chai Couple Cafe Banner"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end justify-center pb-4">
-            <h1 className="text-3xl font-bold text-white tracking-tight shadow-sm">
-              The Chai Couple Cafe
-            </h1>
-          </div>
-        </div> */}
-
-        <div className="space-y-2">
-          <h2 className="text-2xl font-bold text-primary">Order Here!!</h2>
-          <p className="text-muted-foreground font-medium">
-            Open From Tuesday - Sunday. 4pm - 6pm
-          </p>
-        </div>
-
-        <div className="flex flex-wrap justify-center gap-4 text-sm">
-          <a
-            href="https://instagram.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors bg-secondary/50 px-4 py-2 rounded-full"
-          >
-            <Instagram className="w-4 h-4" />
-            Follow us on Instagram
-          </a>
-          <a
-            href="#"
-            className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors bg-secondary/50 px-4 py-2 rounded-full"
-          >
-            <ExternalLink className="w-4 h-4" />
-            Click here to see the queue
-          </a>
-        </div>
-      </div>
-
       <div className="bg-card rounded-2xl shadow-soft p-8 border border-border/50 backdrop-blur-sm animate-in fade-in-0 slide-in-from-bottom-4 duration-500">
+        {/* Header Section */}
+        <div className="text-center space-y-6 mb-8">
+          {/* <div className="relative w-full h-48 rounded-2xl overflow-hidden shadow-lg border-4 border-card">
+            <img
+              src="/banner.png"
+              alt="The Chai Couple Cafe Banner"
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end justify-center pb-4">
+              <h1 className="text-3xl font-bold text-white tracking-tight shadow-sm">
+                The Chai Couple Cafe
+              </h1>
+            </div>
+          </div> */}
+
+          <div className="space-y-2">
+            <h2 className="text-2xl font-bold text-primary">Order Here!!</h2>
+            <p className="text-muted-foreground font-medium">
+              Open From Tuesday - Sunday. 4pm - 6pm
+            </p>
+          </div>
+
+          <div className="flex justify-center gap-4 text-sm">
+            <a
+              href="https://instagram.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors bg-secondary/50 px-4 py-2 rounded-full"
+            >
+              <Instagram className="w-4 h-4" />
+              Follow us on Instagram
+            </a>
+            {/* <a
+              href="#"
+              className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors bg-secondary/50 px-4 py-2 rounded-full"
+            >
+              <ExternalLink className="w-4 h-4" />
+              Click here to see the queue
+            </a> */}
+          </div>
+        </div>
+
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
