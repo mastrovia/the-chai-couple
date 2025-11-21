@@ -81,7 +81,7 @@ const OrderStatus = () => {
                             </div>
 
                             {statusData && (
-                                <div className="grid grid-cols-1 gap-4 pt-4 border-t border-border/50">
+                                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-border/50">
                                     <div className="bg-background/50 p-3 rounded-lg">
                                         <div className="flex items-center justify-center gap-2 text-muted-foreground mb-1">
                                             <Users className="w-4 h-4" />
@@ -89,13 +89,13 @@ const OrderStatus = () => {
                                         </div>
                                         <p className="text-xl font-bold">{statusData.pendingAhead}</p>
                                     </div>
-                                    {/* <div className="bg-background/50 p-3 rounded-lg">
+                                    <div className="bg-background/50 p-3 rounded-lg">
                                         <div className="flex items-center justify-center gap-2 text-muted-foreground mb-1">
                                             <Clock className="w-4 h-4" />
                                             <span className="text-xs font-medium uppercase">Completed</span>
                                         </div>
                                         <p className="text-xl font-bold">{statusData.completedBefore}</p>
-                                    </div> */}
+                                    </div>
                                 </div>
                             )}
                         </div>
