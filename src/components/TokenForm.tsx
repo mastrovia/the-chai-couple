@@ -127,7 +127,7 @@ export function TokenForm() {
 
           <div className="flex justify-center gap-4 text-sm">
             <a
-              href="https://instagram.com"
+              href="https://www.instagram.com/thechaicouplechafe"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors bg-secondary/50 px-4 py-2 rounded-full"
