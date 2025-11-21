@@ -56,12 +56,12 @@ const OrderStatus = () => {
             <div className="w-full max-w-md mx-auto">
                 <div className="bg-card rounded-2xl shadow-soft p-8 border border-border/50 backdrop-blur-sm animate-in fade-in-0 slide-in-from-bottom-4 duration-500">
                     <div className="flex flex-col items-center text-center space-y-6">
-                        <div className="relative">
+                        {/* <div className="relative">
                             <div className="absolute inset-0 bg-success/20 blur-2xl rounded-full animate-pulse"></div>
                             <div className="relative bg-success/10 p-4 rounded-full ring-4 ring-success/20">
                                 <Check className="h-12 w-12 text-success" strokeWidth={2.5} />
                             </div>
-                        </div>
+                        </div> */}
 
                         <div className="space-y-2">
                             <h2 className="text-2xl font-bold tracking-tight">Order Status</h2>
